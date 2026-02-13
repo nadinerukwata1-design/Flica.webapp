@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLICA - Financial Literacy in Children Activated 🦀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes coins-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 1; }
+        }
+        @keyframes crab-walk {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(5px) rotate(5deg); }
+            75% { transform: translateX(-5px) rotate(-5deg); }
+        }
+        .mr-crabz { animation: crab-walk 2s infinite; font-size: 4rem; }
+        .float { animation: float 3s infinite; }
+        .coins-fall { animation: coins-fall 0.5s ease-out; }
+        .ocean-bg {
+            background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 50%, #0c4a6e 100%);
+        }
+        .sand-bg {
+            background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
+        }
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: bubble-rise 4s infinite;
+        }
+        @keyframes bubble-rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.7; }
+            100% { transform: translateY(-600px) scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="ocean-bg min-h-screen relative overflow-hidden">
+    <!-- Floating Bubbles -->
+    <div class="bubble" style="left: 10%; width: 30px; height: 30px; animation-delay: 0s;"></div>
+    <div class="bubble" style="left: 30%; width: 20px; height: 20px; animation-delay: 1s;"></div>
+    <div class="bubble" style="left: 50%; width: 40px; height: 40px; animation-delay: 2s;"></div>
+    <div class="bubble" style="left: 70%; width: 25px; height: 25px; animation-delay: 1.5s;"></div>
+    <div class="bubble" style="left: 90%; width: 35px; height: 35px; animation-delay: 0.5s;"></div>
+
+    <div class="max-w-6xl mx-auto px-4 py-6 relative z-10">
+        <!-- Header -->
+        <header class="bg-white/95 backdrop-blur rounded-2xl shadow-2xl p-6 mb-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="mr-crabz">🦀</div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-sky-900">FLICA</h1>
+                        <p class="text-sm text-sky-700">Financial Literacy in Children Activated</p>
+                        <p class="text-xs text-sky-600 italic">with Mr. Crabz, your Money Coach!</p>
+                    </div>
+                </div>
+                <div class="text-right bg-gradient-to-br from-yellow-400 to-amber-500 px-6 py-3 rounded-xl shadow-lg">
+                    <p class="text-xs text-amber-900 font-semibold">Your Treasure</p>
+                    <p class="text-3xl font-bold text-white" id="totalMoney">$0.00</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Panel - Quick Actions & Goals -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Money Tracker -->
+                <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6">
+                    <h2 class="text-2xl font-bold text-sky-900 mb-4 flex items-center gap-2">
+                        💰 Money Tracker
+                    </h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-sky-800 mb-2">I got money! 💵</label>
+                            <input type="number" id="moneyIn" placeholder="How much?" 
+                                class="w-full px-4 py-2 border-2 border-green-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                            <input type="text" id="moneyInSource" placeholder="From where? (allowance, chores, gift)" 
+                                class="w-full px-4 py-2 border-2 border-green-300 rounded-lg mt-2 focus:ring-2 focus:ring-green-500">
+                            <button id="addMoneyBtn" class="w-full mt-2 bg-green-500 text-white py-2 rounded-lg font-bold hover:bg-green-600 transition-all transform hover:scale-105">
+                                + Add Money
+                            </button>
+                        </div>
+                        <div class="border-t-2 border-sky-200 pt-3">
+                            <label class="block text-sm font-semibold text-sky-800 mb-2">I spent money! 💸</label>
+                            <input type="number" id="moneyOut" placeholder="How much?" 
+                                class="w-full px-4 py-2 border-2 border-red-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                            <input type="text" id="moneyOutReason" placeholder="What did you buy?" 
+                                class="w-full px-4 py-2 border-2 border-red-300 rounded-lg mt-2 focus:ring-2 focus:ring-red-500">
+                            <button id="spendMoneyBtn" class="w-full mt-2 bg-red-500 text-white py-2 rounded-lg font-bold hover:bg-red-600 transition-all transform hover:scale-105">
+                                - Spend Money
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Level & XP -->
+                <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl p-6 text-white">
+                    <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+                        ⭐ Your Level
+                    </h2>
+                    <div class="text-center">
+                        <p class="text-5xl font-bold mb-2" id="userLevel">1</p>
+                        <p class="text-sm opacity-90">Money Master Level</p>
+                        <div class="mt-4 bg-white/30 rounded-full h-6 overflow-hidden">
+                            <div id="xpBar" class="bg-yellow-300 h-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <p class="text-xs mt-2 opacity-90"><span id="currentXP">0</span> / <span id="nextLevelXP">100</span> XP</p>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6">
+                    <h2 class="text-xl font-bold text-sky-900 mb-3">🏆 Badges Earned</h2>
+                    <div id="badgesContainer" class="grid grid-cols-3 gap-3">
+                        <div class="text-center opacity-30">
+                            <div class="text-4xl">🎯</div>
+                            <p class="text-xs mt-1">First Goal</p>
+                        </div>
+                        <div class="text-center opacity-30">
+                            <div class="text-4xl">💎</div>
+                            <p class="text-xs mt-1">Big Saver</p>
+                        </div>
+                        <div class="text-center opacity-30">
+                            <div class="text-4xl">🚀</div>
+                            <p class="text-xs mt-1">Goal Crusher</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Panel - Mr. Crabz Chat & Goals -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Savings Goals -->
+                <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6">
+                    <h2 class="text-2xl font-bold text-sky-900 mb-4">🎯 My Savings Goals</h2>
+                    
+                    <div class="mb-4 p-4 bg-sky-50 border-2 border-sky-200 rounded-xl">
+                        <input type="text" id="newGoalName" placeholder="What do you want to save for?" 
+                            class="w-full px-3 py-2 border-2 border-sky-300 rounded-lg mb-2 focus:ring-2 focus:ring-sky-500">
+                        <input type="number" id="newGoalAmount" placeholder="How much does it cost?" 
+                            class="w-full px-3 py-2 border-2 border-sky-300 rounded-lg mb-2 focus:ring-2 focus:ring-sky-500">
+                        <button id="addGoalBtn" class="w-full bg-sky-600 text-white py-2 rounded-lg font-bold hover:bg-sky-700 transition-all">
+                            ➕ Create Goal
+                        </button>
+                    </div>
+
+                    <div id="goalsContainer" class="space-y-3">
+                        <p class="text-gray-400 italic text-center py-4">No goals yet! What do you want to save for?</p>
+                    </div>
+                </div>
+
+                <!-- Mr. Crabz AI Coach -->
+                <div class="bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl shadow-xl p-6 text-white">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="text-5xl float">🦀</div>
+                        <div>
+                            <h2 class="text-2xl font-bold">Mr. Crabz Says...</h2>
+                            <p class="text-sm opacity-90">Your Money Coach</p>
+                        </div>
+                    </div>
+                    <div id="crabzAdvice" class="bg-white/20 backdrop-blur rounded-xl p-4 mb-4 min-h-[120px] text-sm">
+                        <p class="italic">"Hey there, money master! Track your spending and I'll help you spot why you might be breaking your savings promises! 🦀💰"</p>
+                    </div>
+                    <button id="getCrabzAdvice" class="w-full bg-white text-orange-600 py-2 rounded-lg font-bold hover:bg-orange-50 transition-all transform hover:scale-105">
+                        🧠 Ask Mr. Crabz for Advice
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel - History & Insights -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Spending History -->
+                <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6">
+                    <h2 class="text-xl font-bold text-sky-900 mb-4">📊 Recent Activity</h2>
+                    <div id="historyContainer" class="space-y-2 max-h-96 overflow-y-auto">
+                        <p class="text-gray-400 italic text-center py-4">No activity yet!</p>
+                    </div>
+                </div>
+
+                <!-- Blind Spots AI Analysis -->
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white">
+                    <h2 class="text-xl font-bold mb-3 flex items-center gap-2">
+                        🔍 Your Money Blind Spots
+                    </h2>
+                    <div id="blindSpotsContainer" class="space-y-2 text-sm">
+                        <p class="italic opacity-90">Spend some money and I'll analyze your patterns...</p>
+                    </div>
+                </div>
+
+                <!-- Parent Dashboard Preview -->
+                <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-lg font-bold text-sky-900">👨‍👩‍👧 Parent View</h2>
+                        <button class="text-xs bg-sky-100 text-sky-700 px-3 py-1 rounded-full font-semibold">
+                            PREMIUM
+                        </button>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex justify-between">
+                            <span>Total Saved:</span>
+                            <span class="font-bold" id="parentTotalSaved">$0.00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Goals Progress:</span>
+                            <span class="font-bold" id="parentGoalsProgress">0%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Spending Habits:</span>
+                            <span class="font-bold text-green-600" id="parentHabit">Learning</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Celebration Modal -->
+        <div id="celebrationModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur flex items-center justify-center z-50">
+            <div class="bg-white rounded-3xl p-8 max-w-md text-center transform scale-0 transition-all" id="celebrationContent">
+                <div class="text-8xl mb-4">🎉</div>
+                <h2 class="text-3xl font-bold text-sky-900 mb-2">Awesome!</h2>
+                <p class="text-lg text-gray-600 mb-4" id="celebrationText"></p>
+                <button id="closeCelebration" class="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-3 rounded-full font-bold text-lg hover:scale-105 transition-all">
+                    Keep Going! 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let appData = {
+            totalMoney: 0,
+            level: 1,
+            xp: 0,
+            goals: [],
+            history: [],
+            badges: [],
+            spendingPatterns: {}
+        };
+
+        // Load data
+        async function loadData() {
+            try {
+                const result = await window.storage.get('flica-data');
+                if (result) {
+                    appData = JSON.parse(result.value);
+                    updateUI();
+                }
+            } catch (e) {
+                console.log('Starting fresh!');
+            }
+        }
+
+        // Save data
+        async function saveData() {
+            try {
+                await window.storage.set('flica-data', JSON.stringify(appData));
+            } catch (e) {
+                console.error('Save failed:', e);
+            }
+        }
+
+        // Update all UI
+        function updateUI() {
+            document.getElementById('totalMoney').textContent = '$' + appData.totalMoney.toFixed(2);
+            document.getElementById('userLevel').textContent = appData.level;
+            document.getElementById('currentXP').textContent = appData.xp;
+            const nextLevel = appData.level * 100;
+            document.getElementById('nextLevelXP').textContent = nextLevel;
+            const xpPercent = (appData.xp / nextLevel) * 100;
+            document.getElementById('xpBar').style.width = xpPercent + '%';
+            
+            renderGoals();
+            renderHistory();
+            updateParentDashboard();
+        }
+
+        // Add Money
+        document.getElementById('addMoneyBtn').addEventListener('click', async () => {
+            const amount = parseFloat(document.getElementById('moneyIn').value);
+            const source = document.getElementById('moneyInSource').value;
+            
+            if (!amount || amount <= 0) {
+                alert('Enter an amount!');
+                return;
+            }
+
+            appData.totalMoney += amount;
+            appData.xp += Math.floor(amount);
+            
+            appData.history.unshift({
+                type: 'income',
+                amount: amount,
+                source: source || 'Money received',
+                date: new Date().toISOString()
+            });
+
+            checkLevelUp();
+            showCoinsAnimation();
+            
+            document.getElementById('moneyIn').value = '';
+            document.getElementById('moneyInSource').value = '';
+            
+            await saveData();
+            updateUI();
+        });
+
+        // Spend Money
+        document.getElementById('spendMoneyBtn').addEventListener('click', async () => {
+            const amount = parseFloat(document.getElementById('moneyOut').value);
+            const reason = document.getElementById('moneyOutReason').value;
+            
+            if (!amount || amount <= 0) {
+                alert('Enter an amount!');
+                return;
+            }
+
+            if (amount > appData.totalMoney) {
+                alert("You don't have enough money!");
+                return;
+            }
+
+            appData.totalMoney -= amount;
+            
+            appData.history.unshift({
+                type: 'expense',
+                amount: amount,
+                reason: reason || 'Spent money',
+                date: new Date().toISOString()
+            });
+
+            // Track spending patterns
+            const category = categorizeSpending(reason);
+            appData.spendingPatterns[category] = (appData.spendingPatterns[category] || 0) + 1;
+
+            document.getElementById('moneyOut').value = '';
+            document.getElementById('moneyOutReason').value = '';
+            
+            await saveData();
+            updateUI();
+            analyzeBlindSpots();
+        });
+
+        // Categorize spending
+        function categorizeSpending(reason) {
+            const lower = reason.toLowerCase();
+            if (lower.includes('candy') || lower.includes('snack') || lower.includes('sweet')) return 'snacks';
+            if (lower.includes('toy') || lower.includes('game')) return 'toys';
+            if (lower.includes('food') || lower.includes('lunch')) return 'food';
+            return 'other';
+        }
+
+        // Add Goal
+        document.getElementById('addGoalBtn').addEventListener('click', async () => {
+            const name = document.getElementById('newGoalName').value;
+            const amount = parseFloat(document.getElementById('newGoalAmount').value);
+            
+            if (!name || !amount || amount <= 0) {
+                alert('Fill in both fields!');
+                return;
+            }
+
+            appData.goals.push({
+                id: Date.now(),
+                name: name,
+                target: amount,
+                saved: 0,
+                created: new Date().toISOString()
+            });
+
+            appData.xp += 50;
+            checkLevelUp();
+
+            document.getElementById('newGoalName').value = '';
+            document.getElementById('newGoalAmount').value = '';
+            
+            await saveData();
+            updateUI();
+            celebrate('New goal created! 🎯', '+ 50 XP');
+        });
+
+        // Render Goals
+        function renderGoals() {
+            const container = document.getElementById('goalsContainer');
+            
+            if (appData.goals.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 italic text-center py-4">No goals yet! What do you want to save for?</p>';
+                return;
+            }
+
+            container.innerHTML = appData.goals.map(goal => {
+                const progress = (goal.saved / goal.target) * 100;
+                return `
+                    <div class="bg-gradient-to-r from-sky-50 to-blue-50 border-2 border-sky-200 rounded-xl p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-sky-900">${goal.name}</h3>
+                            <button onclick="deleteGoal(${goal.id})" class="text-red-500 hover:text-red-700">✕</button>
+                        </div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-green-600 font-semibold">$${goal.saved.toFixed(2)}</span>
+                            <span class="text-gray-600">of $${goal.target.toFixed(2)}</span>
+                        </div>
+                        <div class="bg-gray-200 rounded-full h-4 overflow-hidden mb-2">
+                            <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-full transition-all" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="number" id="addToGoal${goal.id}" placeholder="Add $" class="flex-1 px-2 py-1 border-2 border-sky-300 rounded text-sm">
+                            <button onclick="addToGoal(${goal.id})" class="bg-green-500 text-white px-4 py-1 rounded font-bold text-sm hover:bg-green-600">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Add to Goal
+        window.addToGoal = async function(goalId) {
+            const input = document.getElementById('addToGoal' + goalId);
+            const amount = parseFloat(input.value);
+            
+            if (!amount || amount <= 0) return;
+            if (amount > appData.totalMoney) {
+                alert("You don't have enough money!");
+                return;
+            }
+
+            const goal = appData.goals.find(g => g.id === goalId);
+            goal.saved += amount;
+            appData.totalMoney -= amount;
+            appData.xp += Math.floor(amount * 2);
+
+            if (goal.saved >= goal.target) {
+                celebrate(`🎉 Goal Achieved: ${goal.name}!`, '+ 200 XP Bonus!');
+                appData.xp += 200;
+            }
+
+            checkLevelUp();
+            input.value = '';
+            await saveData();
+            updateUI();
+        };
+
+        // Delete Goal
+        window.deleteGoal = async function(goalId) {
+            if (!confirm('Delete this goal?')) return;
+            
+            const goal = appData.goals.find(g => g.id === goalId);
+            appData.totalMoney += goal.saved;
+            appData.goals = appData.goals.filter(g => g.id !== goalId);
+            
+            await saveData();
+            updateUI();
+        };
+
+        // Render History
+        function renderHistory() {
+            const container = document.getElementById('historyContainer');
+            
+            if (appData.history.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 italic text-center py-4">No activity yet!</p>';
+                return;
+            }
+
+            container.innerHTML = appData.history.slice(0, 10).map(item => {
+                const icon = item.type === 'income' ? '💵' : '💸';
+                const color = item.type === 'income' ? 'text-green-600' : 'text-red-600';
+                const sign = item.type === 'income' ? '+' : '-';
+                
+                return `
+                    <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <div class="text-2xl">${icon}</div>
+                        <div class="flex-1">
+                            <p class="font-semibold text-sm">${item.source || item.reason}</p>
+                            <p class="text-xs text-gray-500">${new Date(item.date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="${color} font-bold">${sign}$${item.amount.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Check Level Up
+        function checkLevelUp() {
+            const nextLevel = appData.level * 100;
+            if (appData.xp >= nextLevel) {
+                appData.level++;
+                appData.xp -= nextLevel;
+                celebrate(`Level Up! You're now Level ${appData.level}! 🎉`, 'Keep being awesome!');
+            }
+        }
+
+        // Show Celebration
+        function celebrate(title, subtitle) {
+            document.getElementById('celebrationText').innerHTML = `<strong>${title}</strong><br>${subtitle}`;
+            document.getElementById('celebrationModal').classList.remove('hidden');
+            document.getElementById('celebrationContent').classList.add('scale-100');
+        }
+
+        document.getElementById('closeCelebration').addEventListener('click', () => {
+            document.getElementById('celebrationModal').classList.add('hidden');
+            document.getElementById('celebrationContent').classList.remove('scale-100');
+        });
+
+        // Coins Animation
+        function showCoinsAnimation() {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const coin = document.createElement('div');
+                    coin.innerHTML = '🪙';
+                    coin.style.position = 'fixed';
+                    coin.style.left = Math.random() * window.innerWidth + 'px';
+                    coin.style.top = '0';
+                    coin.style.fontSize = '2rem';
+                    coin.className = 'coins-fall';
+                    document.body.appendChild(coin);
+                    setTimeout(() => coin.remove(), 600);
+                }, i * 100);
+            }
+        }
+
+        // AI Blind Spots Analysis
+        async function analyzeBlindSpots() {
+            const expenses = appData.history.filter(h => h.type === 'expense');
+            if (expenses.length < 3) return;
+
+            const patterns = Object.entries(appData.spendingPatterns)
+                .sort((a, b) => b[1] - a[1]);
+
+            const container = document.getElementById('blindSpotsContainer');
+            
+            if (patterns.length === 0) {
+                container.innerHTML = '<p class="italic opacity-90">Keep tracking and I\'ll find patterns...</p>';
+                return;
+            }
+
+            const topPattern = patterns[0];
+            const insights = [
+                `🔍 You spend on <strong>${topPattern[0]}</strong> a lot (${topPattern[1]} times)`,
+                `💡 That's ${Math.round((topPattern[1] / expenses.length) * 100)}% of your spending`,
+                `🎯 Try setting a goal before buying ${topPattern[0]} next time!`
+            ];
+
+            container.innerHTML = insights.map(i => `<p>${i}</p>`).join('');
+        }
+
+        // Get Mr. Crabz AI Advice
+        document.getElementById('getCrabzAdvice').addEventListener('click', async () => {
+            const btn = document.getElementById('getCrabzAdvice');
+            btn.disabled = true;
+            btn.innerHTML = '🦀 Mr. Crabz is thinking...';
+
+            try {
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 300,
+                        messages: [{
+                            role: "user",
+                            content: `You are Mr. Crabz, a friendly crab who teaches 8-12 year olds about money. Be fun, use emojis, keep it simple.
+
+Current situation:
+- Total money: $${appData.totalMoney.toFixed(2)}
+- Goals: ${appData.goals.length}
+- Recent spending: ${appData.history.filter(h => h.type === 'expense').slice(0, 3).map(h => h.reason).join(', ') || 'none yet'}
+
+Give ONE short tip (2-3 sentences max) about saving money or reaching their goals. Be encouraging and fun!`
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                const advice = data.content.find(c => c.type === 'text')?.text || 'Keep saving, you\'re doing great! 🦀';
+                
+                document.getElementById('crabzAdvice').innerHTML = `<p>"${advice}"</p>`;
+            } catch (error) {
+                document.getElementById('crabzAdvice').innerHTML = '<p>"Keep tracking your money and I\'ll help you get better at saving! 🦀💰"</p>';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '🧠 Ask Mr. Crabz for Advice';
+        });
+
+        // Update Parent Dashboard
+        function updateParentDashboard() {
+            const totalSaved = appData.goals.reduce((sum, g) => sum + g.saved, 0);
+            document.getElementById('parentTotalSaved').textContent = '$' + totalSaved.toFixed(2);
+            
+            const avgProgress = appData.goals.length > 0 
+                ? appData.goals.reduce((sum, g) => sum + (g.saved / g.target), 0) / appData.goals.length * 100
+                : 0;
+            document.getElementById('parentGoalsProgress').textContent = Math.round(avgProgress) + '%';
+
+            const expenses = appData.history.filter(h => h.type === 'expense').length;
+            const income = appData.history.filter(h => h.type === 'income').length;
+            const habit = income > expenses ? 'Saving Well! 💪' : 'Learning 📚';
+            document.getElementById('parentHabit').textContent = habit;
+        }
+
+        // Initialize
+        loadData();
+    </script>
+</body>
+</html>
